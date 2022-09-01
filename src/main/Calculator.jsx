@@ -34,11 +34,19 @@ export default class Calculator extends Component {
             const currentOperation = this.state.operation
 
             const values = [...this.state.values]
+            try{
             values[0] = eval(`${values[0]} ${currentOperation} ${values[1]}`)//res vai para values 0 e zera o values 1 \/
+            } catch(e){
+                values[0] = this.state.values[0]
+            }
             values[1] = 0
 
             this.setState({
-                displayValue: values[0]
+                displayValue: values[0],
+                operation: equals ? null: operation,
+                current: equals ? 0 : 1,
+                clearDisplay: !equals,
+                values
             })
         }
 
@@ -74,7 +82,7 @@ export default class Calculator extends Component {
         const setOperation = op => this.setOperation(op)
         return(
             <div className='calculator'>
-                <Display value={this.state.displayValue}></Display>
+                <Display value={this.state.displayValue.toLocaleString("sv-SE", { maximumFractionDigits: 5, minimumFractionDigits: 0 })}></Display>
                 <Button label='AC' click={this.clearMemory} triple></Button>
                 <Button label='/'  click={this.setOperation} operation></Button>
                 <Button label='7'  click={this.addDigit}></Button>
